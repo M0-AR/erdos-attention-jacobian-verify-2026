@@ -1,0 +1,10 @@
+services:
+  research:
+    build: .
+    volumes:
+      - ./results:/repo/results
+      - ./data:/repo/data
+    command: ["python", "experiments/run_all.py", "--out", "results"]
+  test:
+    build: .
+    command: ["python", "-m", "pytest", "-q"]

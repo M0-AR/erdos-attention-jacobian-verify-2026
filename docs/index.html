@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Attention Is the Bottleneck — Verifiable AI-Math (Jacobian)</title>
+<meta name="description" content="Reproducible benchmark verifying the Erdős–attention thesis: R(5,5) bounds, live SymPy bug catch, R(3,3)=6 proof, live-market Ramsey order. 13/13 tests, 9/9 experiments, Docker.">
+<style>
+:root{--bg:#0b1220;--card:#111c33;--line:#24365c;--txt:#e6edf7;--mut:#9fb0cc;--acc:#38bdf8;--grn:#22c55e;--red:#ef4444;--amber:#f59e0b}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header.hero{padding:56px 0 28px;background:radial-gradient(900px 320px at 20% 0%,#1d4ed822,transparent),radial-gradient(800px 300px at 90% 10%,#22c55e22,transparent)}
+.badge{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:3px 12px;margin:3px 4px 3px 0;font-size:13px;color:var(--mut);background:#0f1b31}
+.badge b{color:var(--txt)}.grn{color:var(--grn);font-weight:700}
+h1{font-size:40px;line-height:1.15;margin:14px 0 8px}h2{font-size:28px;margin:44px 0 12px}h3{font-size:19px;margin:22px 0 8px}
+.sub{font-size:19px;color:var(--mut);max-width:820px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.stat{font-size:30px;font-weight:800}.mut{color:var(--mut)}.small{font-size:13px}
+img.resp{max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:#fff}
+table{width:100%;border-collapse:collapse;font-size:14.5px}th,td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}th{background:#0f1b31}
+code{background:#0f1b31;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13.5px}
+pre{background:#0a1428;border:1px solid var(--line);border-radius:12px;padding:16px;overflow:auto;font-size:13.5px}
+a{color:var(--acc)}.btn{display:inline-block;background:var(--acc);color:#04121f;font-weight:800;border-radius:10px;padding:11px 18px;text-decoration:none;margin:6px 8px 6px 0}
+.btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+details{border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:10px 0;background:#0e1930}
+summary{cursor:pointer;font-weight:700}
+/* quiz */
+.q{border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0;background:#0e1930}
+.q h4{margin:0 0 10px}.opt{display:block;width:100%;text-align:left;margin:7px 0;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#13233f;color:var(--txt);cursor:pointer;font-size:15px}
+.opt:hover{border-color:var(--acc)}.opt.ok{border-color:var(--grn);background:#052e1b}.opt.bad{border-color:var(--red);background:#3b0a0a}
+.expl{display:none;margin-top:8px;color:var(--mut)}.expl.show{display:block}
+#score{position:sticky;top:0;background:#0b1220ee;border-bottom:1px solid var(--line);padding:10px 0;z-index:5}
+.bar{height:10px;background:#1e2c4d;border-radius:99px;overflow:hidden}#fill{height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--grn))}
+nav.toc a{display:inline-block;margin:4px 8px 4px 0;font-size:14px}
+footer{padding:34px 0 60px;color:var(--mut)}
+@media(max-width:640px){h1{font-size:30px}}
+</style>
+</head>
+<body>
+<div id="score"><div class="wrap"><b>Quiz progress:</b> <span id="qcount">0 / 8 answered</span> · <span id="qscore">0 correct</span>
+<div class="bar"><div id="fill"></div></div></div></div>
+<header class="hero"><div class="wrap">
+<div><span class="badge"><b>13/13</b> pytest</span><span class="badge"><b>9/9</b> experiments</span><span class="badge">Docker reproducible</span><span class="badge">MIT</span><span class="badge">live market 2026-10-14</span></div>
+<h1>Attention Is the Bottleneck:<br>Verifiable AI-Mathematics</h1>
+<p class="sub"><b>CEO summary in 30 seconds:</b> mathematics is stuck waiting for expert attention. This repo proves — with run-everything code, not slides — that (1) the famous R(5,5) problem is still open at 43–46 and brute force cannot touch it, (2) the everyday math software agents rely on still ships a 10-year-old sign bug that we catch automatically, and (3) real market data already shows the "order at scale" the theory predicts. It gives you a small, typed, checked toolbox ("Jacobian") so agents stop guessing math and start proving it. If you read one thing, read the 4 numbers below.</p>
+<div class="grid">
+<div class="card"><div class="stat grn">43–46</div><div>R(5,5) bounds, verified table. Shadow proof R(3,3)=6: 32,768 cases, 0 counterexamples.</div></div>
+<div class="card"><div class="stat grn">−8, not +8</div><div>SymPy 1.14.0 still returns +8 for Res(x+2,x³). Ground truth −8. Wrapper catches it.</div></div>
+<div class="card"><div class="stat grn">229 vs 140</div><div>Live-market mono-triangles vs random null (+89, +64%). Order at scale, in the wild.</div></div>
+<div class="card"><div class="stat grn">23×</div><div>Persistence dividend: long horizons turn 50.5 rounds into 2.2. Plus 60× attention blowup.</div></div>
+</div>
+<p><a class="btn" href="#beginner">🌱 Start beginner guide</a><a class="btn ghost" href="#quiz">Take the 8-question quiz</a><a class="btn ghost" href="#quickstart">Run it in 30 seconds</a></p>
+<nav class="toc small">
+<a href="#demo">Demo</a>·<a href="#features">Features</a>·<a href="#stories">Who is this for</a>·<a href="#beginner">Beginner guide</a>·<a href="#quiz">Quiz</a>·<a href="#numbers">All numbers</a>·<a href="#quickstart">Quickstart</a>·<a href="#pages">GitHub Pages</a>·<a href="#video">Video</a>·<a href="#limits">Limits</a>
+</nav>
+</div></header>
+<main class="wrap">
+
+<section id="demo"><h2>🎬 Demo — watch, don't take our word</h2>
+<div class="card"><img class="resp" src="assets/demo.gif" alt="Animated demo: E1 Ramsey proof, R(5,5) bounds, E2 SymPy bug catch, E4 market order, 13/13 green"></div>
+<div class="grid">
+<div class="card"><h3>Market Ramsey excess</h3><img class="resp" src="assets/market_ramsey.png" alt="Bar chart 229 vs 140 plus BTC price"></div>
+<div class="card"><h3>Persistence dividend</h3><img class="resp" src="assets/horizon_dividend.png" alt="Expected rounds vs horizon"></div>
+</div>
+<div class="card"><h3>Manufactured attention is quadratic</h3><img class="resp" src="assets/attention_ops.png" alt="Attention ops scaling"></div>
+<p class="small mut">All images are generated from executed code (<code>assets/generate_assets.py</code>), not drawn by hand. Rebuild: <code>PYTHONPATH=src python3 assets/generate_assets.py</code>.</p>
+</section>
+
+<section id="features"><h2>✨ Features — what you get</h2>
+<table><tr><th>Feature</th><th>What it does</th><th>Try</th></tr>
+<tr><td><b>Ramsey lab</b></td><td>Exact K5/triangle counters, R(3,3)=6 exhaustive proof, Exoo-style circulant builder, SAT-size estimator matching literature (903 vars / 1,925,196 clauses).</td><td><code>pytest benchmarks/test_ramsey.py -q</code></td></tr>
+<tr><td><b>Verifiability wrapper</b></td><td>Skeptical oracle+checker: SymPy proposes, manual Sylvester determinant + swap identity disposes. Catches the live 2016 sign bug; guards Poly/Expr confusion by expansion-check.</td><td><code>pytest benchmarks/test_verifiability.py -q</code></td></tr>
+<tr><td><b>Attention models</b></td><td>Queueing bottleneck (60× out-of-field blowup), 100-approach long-horizon search (sim+analytic dual path), transformer ops counter with quadratic scaling test.</td><td><code>pytest benchmarks/test_attention.py -q</code></td></tr>
+<tr><td><b>Live-market Ramsey test</b></td><td>Real BTC/FX/AAPL 2026-09-14–10-14 → K16 correlation graph → exact mono-triangle count vs G(n,½) null. Snapshot persisted by runner.</td><td><code>pytest benchmarks/test_live_market.py -q</code></td></tr>
+<tr><td><b>One-command evidence</b></td><td><code>experiments/run_all.py</code> writes <code>results/results.jsonl</code> + <code>SUMMARY.md</code> + market snapshot; exits 1 on any failure.</td><td><code>PYTHONPATH=src python experiments/run_all.py --out results</code></td></tr>
+<tr><td><b>Docker parity</b></td><td>Same 13/13 + 9/9 inside container. No "works on my machine".</td><td><code>docker compose up test research</code></td></tr>
+<tr><td><b>This page + quiz</b></td><td>Pages-ready single-file site with scratch-to-pro quiz. No build step, no backend.</td><td>Open <code>preview.html</code>, or deploy below.</td></tr>
+</table></section>
+
+<section id="stories"><h2>👥 Who is this for — pick your story</h2>
+<div class="grid">
+<div class="card"><h3>📚 Student (scratch)</h3><p>Learn what a Ramsey number <i>is</i> by watching R(3,3)=6 get proved by brute force, then see why R(5,5) can't. Do the quiz below; every wrong answer teaches.</p></div>
+<div class="card"><h3>🤖 Agent builder</h3><p>Copy the wrapper pattern: untrusted CAS/LLM proposes, tiny checker disposes, certificate flows downstream. Steal <code>src/jacobian/verification.py</code>.</p></div>
+<div class="card"><h3>📈 Quant / data sceptic</h3><p>Audit the market graph: threshold, regimes, null. Change <code>threshold=0.3</code>, re-run, watch excess move — but never vanish (R(3,3)=6 forbids it).</p></div>
+<div class="card"><h3>🎓 Researcher (pro)</h3><p>Extend toward Glucose SAT certificates, SOS/Gröbner tactics, threshold sweeps, arXiv-scale attention-famine measurement. Paper skeleton in <code>PAPER.md</code>.</p></div>
+</div></section>
+
+<section id="beginner"><h2>🌱 Beginner guide — read this and you are a professional</h2>
+<p><i>Let's work this out in a step-by-step way to be sure we have the right answer.</i> No background assumed. Ten minutes, five ideas.</p>
+<div class="card"><h3>Step 0 — What is "verifiable"?</h3><p>2+2=4 is verifiable: anyone can re-check. A vibe ("markets feel random") is not. Mathematics is the most checkable thing humans do — which is exactly why it is the best place to test AI agents. If an agent can't do checkable math honestly, don't let it near uncheckable money.</p></div>
+<div class="card"><h3>Step 1 — Ramsey: order is forced (party trick)</h3><p>Six people at a party always contain 3 mutual friends or 3 mutual strangers. That is R(3,3)=6. We <i>prove</i> it in code by checking all 32,768 seatings. R(5,5) is the same question for 5: the answer is somewhere in {43,44,45,46}. Checking all seatings of 43 people is physically impossible (903 coin flips → 1.9M rules). So mathematicians need cleverness, not just computers.</p></div>
+<div class="card"><h3>Step 2 — Attention: experts are rare (hospital analogy)</h3><p>Imagine 32 wards, 3 doctors each. A doctor reads her own ward's chart in a day, another ward's in two months (60×). Now 256 charts arrive. That queue <i>is</i> mathematics. AI that drafts 30% of charts at 10× speed manufactures the missing attention — but a senior must still sign every page. Unsigned AI math is malpractice.</p></div>
+<div class="card"><h3>Step 3 — Persistence: try 100 doors (keys analogy)</h3><p>A breakthrough is 1 good key among 100. Trying each key once briefly fails 50 times on average; studying each key 30× longer succeeds in ~2 rounds (23× dividend). Perelman's 7 years = long horizon + many keys + never shipping an unchecked proof. Agents need the same: parallel tries, long runs, strict checkers.</p></div>
+<div class="card"><h3>Step 4 — Trust nothing: the calculator lies (receipt analogy)</h3><p>Our installed calculator says a bill is +8; two independent recounts say −8. The 2016 misprint never got fixed. The fix isn't a better calculator — it's <i>always keeping the receipt</i> (Sylvester determinant + swap identity). Every technique here ships its receipt (a certificate). No receipt, no belief.</p></div>
+<div class="card"><h3>Step 5 — Markets rhyme (six-people rule, again)</h3><p>Take 4 prices × 4 weeks = 16 "people". Link two if they moved together. Out of 560 triples, 229 are all-linked or all-unlinked vs 140 if coins were flipped (+89). Randomness doesn't survive aggregation — in colorings or in markets. You now know more than most interview candidates: <b>bounds beat beliefs, receipts beat oracles, horizons beat hurry.</b></p></div>
+<details><summary>Professional checklist (say these in a meeting)</summary><p>43–46 with sources. 32,768-case shadow proof. 903/1.9M barrier. +8 vs −8 live bug + Sylvester receipt. 229 vs 140 (+89). 60× blowup. 50.5→2.22 horizons. Quadratic attention. Skeptical architecture. Docker green.</p></details>
+</section>
+
+<section id="quiz"><h2>🧠 Interactive quiz — scratch to pro (8 questions)</h2>
+<p class="mut">Click an answer. Explanations appear instantly. Score is local (no tracking). 6+/8 = pro.</p>
+<div id="quizbox"></div>
+<div class="card"><b>Result:</b> <span id="final">answer questions to reveal your level…</span>
+<br><button class="btn" onclick="resetQuiz()">Reset quiz</button></div></section>
+
+<section id="numbers"><h2>🔢 All numbers — nothing by hand</h2>
+<table><tr><th>Claim</th><th>Verified value</th><th>Where</th></tr>
+<tr><td>R(3,3)</td><td>6 — 32,768 K6 colorings, 0 counterexamples; C5 witness 0</td><td>E1 / B1</td></tr>
+<tr><td>R(5,5)</td><td>43 ≤ R ≤ 46 (Exoo 1989; Angeltveit–McKay 2024/2026)</td><td>E1 / B1</td></tr>
+<tr><td>K43 SAT</td><td>903 vars, 1,925,196 clauses (matches literature)</td><td>E1 / B1</td></tr>
+<tr><td>Resultant truth</td><td>Res(x+2,x³) = −8; Res(x+a,x³) = −a³ (Sylvester)</td><td>E2 / B2</td></tr>
+<tr><td>SymPy 1.14.0 raw</td><td>+8 / +a³ (wrong sign) — bug live, wrapper flags it</td><td>E2 / B2</td></tr>
+<tr><td>Attention blowup</td><td>60× out-of-field; manufactured 960 units</td><td>E3 / B3</td></tr>
+<tr><td>Horizon dividend</td><td>p=0.0002: 50.5 → 7.65 → 2.22 rounds (h=1/7/30)</td><td>E3 / B3</td></tr>
+<tr><td>Attention ops</td><td>6·8·4096² ≈ 8.05×10⁸; 4× tokens → 16× ops</td><td>E3 / B3</td></tr>
+<tr><td>Market graph</td><td>K16: 229/560 mono-K3 vs 140.0 null (excess +89, +64%)</td><td>E4 / B4</td></tr>
+<tr><td>Gates</td><td>13/13 pytest · 9/9 experiments · Docker green</td><td>results/</td></tr></table>
+<p class="small mut">Window 2026-09-14–10-14: BTC 78,539.74→81,646.44 (31 closes), FX 23 pts, AAPL $345.925 (+1.36%). Snapshot: <code>results/market_snapshot_2026-10-14.json</code>.</p>
+</section>
+
+<section id="quickstart"><h2>🚀 Quickstart — 30 seconds to green</h2>
+<pre>docker compose build
+docker compose up research   # 9/9 experiments -&gt; results/
+docker compose up test       # 13/13 pytest
+# bare metal:
+pip install numpy sympy networkx pandas requests pyyaml pytest matplotlib pillow
+PYTHONPATH=src pytest -q &amp;&amp; PYTHONPATH=src python experiments/run_all.py --out results
+PYTHONPATH=src python assets/generate_assets.py  # rebuild charts + demo.gif</pre>
+<details><summary>Repo map</summary><pre>src/jacobian/{ramsey,verification,attention,live_data}.py
+benchmarks/test_{ramsey,verifiability,attention,live_market}.py
+experiments/run_all.py  assets/generate_assets.py  assets/*.png|gif
+results/results.jsonl  results/SUMMARY.md  docs/*.md  PAPER.md  LICENSE</pre></details>
+</section>
+
+<section id="pages"><h2>🌐 GitHub Pages — click a link, see this page</h2>
+<div class="card"><h3>Deploy (branch source, 2026 UI)</h3><p>1. Push this repo to GitHub. 2. Open <b>Settings → Pages</b>. 3. Under <b>Build and deployment → Source</b> choose <b>Deploy from a branch</b>. 4. Branch: <b>main</b>, folder: <b>/(root)</b> (this file is <code>preview.html</code> at root; <code>.nojekyll</code> keeps underscores working). 5. Save → wait ~1 min → open <code>https://&lt;user&gt;.github.io/&lt;repo&gt;/preview.html</code>. Alternative: folder <b>/docs</b> serves the mirrored copy at <code>docs/index.html</code> (synced from <code>preview.html</code>).</p><p class="small mut">Custom domain: Settings → Pages → Custom domain → add CNAME + DNS. Enforce HTTPS on. No build step needed — single self-contained file + relative <code>assets/</code>.</p></div></section>
+
+<section id="video"><h2>🎥 Video demo — record your own in 2 minutes</h2>
+<p>Terminal GIF (no screen recorder): record with <code>asciinema</code>, convert with <code>agg</code> (font/size/speed flags), or script it with <code>VHS</code>. Browser flow: use <code>screencli</code>. Our <code>assets/demo.gif</code> is generated from real results by <code>assets/generate_assets.py</code> (Pillow frames) so it never drifts from the numbers — regenerate after any code change and commit the fresh GIF.</p>
+<pre># your own recording (optional, not required for green):
+asciinema rec demo.cast -c "PYTHONPATH=src python experiments/run_all.py --out results"
+agg demo.cast assets/demo.gif --font-size 16 --speed 1.4
+# screenshot this page for the README:
+# open preview.html → capture hero + quiz → save to assets/shot-hero.png</pre>
+</section>
+
+<section id="limits"><h2>⚠️ Limits — stated plainly</h2>
+<p>R(5,5) bounds are cited + shadow-proved (R(3,3)=6), not re-computed (CPU-year class). Interview figures (1 day/months) are parameterized, not ethnography. Market excess is threshold-dependent (code accepts any threshold; 0.3 reported). Vendor AI-proof headlines are news-sourced; conclusions rest on peer-reviewed items. Not financial advice.</p></section>
+
+</main>
+<footer><div class="wrap"><p>MIT — see LICENSE. Reproduce everything: <code>docker compose up research test</code>. Paper skeleton: <code>PAPER.md</code>. Methods: <code>docs/METHODOLOGY.md</code>.</p></div></footer>
+<script>
+const QUIZ=[
+{q:"R(5,5) is currently known to lie in…",o:["[42, 43]","[43, 46]","[45, 48]","Exactly 43 (proved)"],a:1,e:"Lower 43 (Exoo 1989 K42 coloring); upper 46 (Angeltveit–McKay 2024/2026). 43 is conjectured, not proved."},
+{q:"Our tractable shadow proof shows R(3,3) = …",o:["5","6","9","Unknown"],a:1,e:"All 32,768 colorings of K6 contain a mono-triangle; C5 witness has none. Same method as R(5,5), laptop scale."},
+{q:"On SymPy 1.14.0, raw resultant(x+2, x³) gives… (truth?)",o:["−8 (correct)","0","+8 (wrong sign; truth −8)","Error"],a:2,e:"Live repro of the 2016 sign bug: raw +8 vs Sylvester −8. Wrapper returns truth and flags the bug."},
+{q:"The swap identity Res(f,g) vs Res(g,f) carries sign…",o:["Always equal","(−1)^(deg f · deg g) — here −1, so −8 vs +8","(−1)^(deg f + deg g)","No relation"],a:1,e:"Degrees 1 and 3 → (−1)^3 = −1. Both SymPy orders returning +8 violates it — the detection signal."},
+{q:"Live-market K16 has mono-triangles…",o:["229/560 vs 140 null (+89)","140/560 exactly null","90/560 below null","560/560 all mono"],a:0,e:"Real 2026-09-14–10-14 BTC/FX data, threshold 0.3. Excess +64% over G(n,½). R(3,3)=6 already forces some order."},
+{q:"At difficulty p=0.0002, horizon 1→30 changes expected rounds…",o:["50.5 → 2.22 (23× dividend)","2.22 → 50.5 (worse)","No change","1.0 → 1.0"],a:0,e:"Persistence dividend: studying each approach longer collapses 50.5 rounds to 2.2. Long horizons aren't optional."},
+{q:"Transformer attention ops scale with tokens as…",o:["Linear","Quadratic (4× tokens → 16×)","Exponential","Constant"],a:1,e:"layers·heads·n². Measured: 1024→4096 gives exactly 16×. Manufacturing attention is cheap; verifying it isn't."},
+{q:"The skeptical (oracle+checker) rule is…",o:["Trust the CAS; it is mature","CAS proposes, independent checker disposes; no receipt, no belief","Only LLMs need checking","Check once a year"],a:1,e:"SymPy proposes, Sylvester disposes; Lean kernel in production. Our 2-line checker neutralized a 10-year bug."}];
+let ans=new Array(QUIZ.length).fill(-1);
+function render(){const b=document.getElementById('quizbox');b.innerHTML='';QUIZ.forEach((Q,i)=>{const d=document.createElement('div');d.className='q';d.innerHTML=`<h4>Q${i+1}. ${Q.q}</h4>`;Q.o.forEach((t,j)=>{const btn=document.createElement('button');btn.className='opt';btn.textContent=String.fromCharCode(65+j)+'. '+t;btn.onclick=()=>answer(i,j);if(ans[i]!==-1){if(j===Q.a)btn.classList.add('ok');else if(j===ans[i])btn.classList.add('bad');btn.disabled=true;}d.appendChild(btn);});const e=document.createElement('div');e.className='expl'+(ans[i]!==-1?' show':'');e.textContent=(ans[i]!==-1?((ans[i]===Q.a?'✅ Correct. ':'❌ Not quite. ')+Q.e):'');d.appendChild(e);b.appendChild(d);});update();}
+function answer(i,j){if(ans[i]!==-1)return;ans[i]=j;render();}
+function resetQuiz(){ans=new Array(QUIZ.length).fill(-1);render();}
+function update(){const n=ans.filter(x=>x!==-1).length,s=ans.filter((x,i)=>x===QUIZ[i].a).length;document.getElementById('qcount').textContent=`${n} / 8 answered`;document.getElementById('qscore').textContent=`${s} correct`;document.getElementById('fill').style.width=(n/8*100)+'%';const f=document.getElementById('final');if(n<8)f.textContent='answer questions to reveal your level…';else f.textContent=s>=7?'🏆 Pro: you can defend every number in a meeting.':s>=5?'🥈 Strong: re-read the two you missed.':s>=3?'🥉 Rising: redo the beginner guide steps.':'🌱 Keep going: the beginner guide takes 10 minutes.';}
+render();
+</script>
+</body>
+</html>

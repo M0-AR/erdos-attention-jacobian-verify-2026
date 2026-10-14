@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "erdos-attention-jacobian"
+version = "0.1.0"
+description = "Verifiable atomic composable techniques for AI mathematics: Ramsey, attention-bottleneck, long-horizon parallelism, live-market order tests."
+requires-python = ">=3.10"
+dependencies = ["numpy", "sympy", "networkx", "pandas", "requests", "pyyaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["benchmarks", "src"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100

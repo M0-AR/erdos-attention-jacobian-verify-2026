@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+# Test / tool caches (keep results/ + assets/ committed as evidence)
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+# Local overrides (never commit secrets)
+.env
