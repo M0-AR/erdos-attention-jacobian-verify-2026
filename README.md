@@ -11,7 +11,7 @@
 [![live-data](https://img.shields.io/badge/live--data-2026--10--14-orange.svg)](#-live-market-ramsey-test)
 [![pages](https://img.shields.io/badge/preview-HTML_quiz-blueviolet.svg)](preview.html)
 
-[🌱 Beginner guide](#-beginner-guide--read-this-and-you-are-a-professional) · [🎬 Demo](#-demo--watch-dont-take-our-word) · [🧠 Quiz](preview.html#quiz) · [🚀 Quickstart](#-quickstart--30-seconds-to-green) · [🌐 Live site](preview.html)
+[🌱 Beginner guide](#-beginner-guide--read-this-and-you-are-a-professional) · [🎬 Demo](#-demo--watch-dont-take-our-word) · [🧠 Quiz](https://m0-ar.github.io/erdos-attention-jacobian-verify-2026/preview.html#quiz) · [🚀 Quickstart](#-quickstart--30-seconds-to-green) · [🌐 Live site](https://m0-ar.github.io/erdos-attention-jacobian-verify-2026/)
 
 </div>
 
@@ -105,7 +105,37 @@ Repo map: `src/jacobian/{ramsey,verification,attention,live_data}.py` · `benchm
 
 ## 🌐 GitHub Pages — click a link, see this page
 
-1. Push to GitHub. 2. **Settings → Pages** → Source: **Deploy from a branch**. 3. Branch **main**, folder **/(root)** (`preview.html` + `.nojekyll`), or folder **/docs** (mirror `docs/index.html`). 4. Save → ~1 min → `https://<user>.github.io/<repo>/preview.html`. Custom domain via CNAME + Enforce HTTPS. No build step.
+**Live links (click; all three resolve under the robust mirror layout):**
+
+| Entry | Clickable link | Renders |
+|---|---|---|
+| `/` (redirect → preview) | [m0-ar.github.io/erdos-attention-jacobian-verify-2026/](https://m0-ar.github.io/erdos-attention-jacobian-verify-2026/) | landing + auto-forward to the interactive page |
+| `/preview.html` | [m0-ar.github.io/erdos-attention-jacobian-verify-2026/preview.html](https://m0-ar.github.io/erdos-attention-jacobian-verify-2026/preview.html) | full site + quiz (root source) |
+| `/docs/preview.html` | [m0-ar.github.io/erdos-attention-jacobian-verify-2026/docs/preview.html](https://m0-ar.github.io/erdos-attention-jacobian-verify-2026/docs/preview.html) | same site (root source path mirror) |
+
+> With source set to **/docs**, the canonical URLs are `/` (via `docs/index.html`) and `/preview.html` (via `docs/preview.html`, served without the `/docs` prefix). The table above covers source `/` (root); mirrors make both settings resolve — recommended setting is **/docs** (non-fatal if ignored).
+
+**Deploy (branch source):** 1. Push to GitHub. 2. **Settings → Pages** → Source: **Deploy from a branch**. 3. Branch **main**, folder **/docs** (recommended; canonical `docs/preview.html` + `docs/index.html` with `../assets` paths, plus `docs/.nojekyll`). Mirrors at root (`preview.html` with `assets/`, `index.html` redirect, `.nojekyll`) keep **/(root)** working too. 4. Save → wait 1–2 min → check the Actions “pages build and deployment” run → click the table. Custom domain via CNAME + Enforce HTTPS. No build step.
+
+<details><summary>Green build but 404? Diagnose in 10 seconds (publishing-source mismatch)</summary>
+
+```bash
+BASE="https://m0-ar.github.io/erdos-attention-jacobian-verify-2026"
+for p in "" "preview.html" "docs/preview.html"; do
+  printf "%s -> " "/$p"
+  curl -s -o /dev/null -w "%{http_code}\n" "$BASE/$p"
+done
+```
+
+| `/` | `/preview.html` | `/docs/preview.html` | Meaning |
+|---|---|---|---|
+| 200 | 200 | 404 | source = `/docs`, all good |
+| 200 | 404 | 200 | source = `/` (root); file only under `/docs` |
+| 404 | 404 | 404 | Pages off / still building / wrong branch |
+| 200 | 404 | 404 | source = `/`, but neither entry nor file exists |
+
+Rules: entry `index.html` must sit at the top of the chosen source (`/` or `/docs`); other URLs mirror the repo path under the source (source `/docs` → `docs/x.html` serves at `/x.html`); `.nojekyll` in the source folder; asset paths relative (`assets/…` from root, `../assets/…` from `/docs`); wait 1–2 min after Settings changes. This repo ships all mirrors + both `.nojekyll` files so every row above resolves.
+</details>
 
 ## 🎥 Video demo — record your own in 2 minutes
 
